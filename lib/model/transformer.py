@@ -1,28 +1,27 @@
 """
 Transformer
 """
-import copy
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
 from .layers.layer import Encoder, Decoder
 from .layers.modules import Affine
-from .layers.embedding import WordEmbedding
+from .layers.embedding import PositionalEmbedding
 
 
 class Transformer(nn.Module):
     """ Assemble layers to build Transformer """
 
-    def __init__(self, d_m, vocab_size, d_ff, n=3):
+    def __init__(self, d_m, inp_vocab_size, out_vocab_size, d_ff, n=3):
         super(Transformer, self).__init__()
-        self.inp_emb = WordEmbedding(vocab_size, d_m)
-        self.out_emb = WordEmbedding(vocab_size, d_m)
+        self.inp_emb = PositionalEmbedding(inp_vocab_size, d_m)
+        self.out_emb = PositionalEmbedding(out_vocab_size, d_m)
         self.enc_layers = nn.ModuleList(
             [Encoder(d_m, d_ff) for _ in range(n)])
         self.dec_layers = nn.ModuleList(
             [Decoder(d_m, d_m, d_ff) for _ in range(n)])
-        self.affine = Affine(d_m, vocab_size)
+        self.affine = Affine(d_m, out_vocab_size)
         self.n = n
 
     def encoder(self, inp_batch, src_mask):

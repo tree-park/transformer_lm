@@ -18,11 +18,6 @@ class PositionalEmbedding(nn.Module):
         self.embedding = WordEmbedding(vocab_size, emb_dim)
         self.dropout = nn.Dropout(p=0.1)
 
-    def word_emb(self, inp):
-        scale = torch.sqrt(torch.FloatTensor([inp.size(0)]))
-        out = self.embedding(inp) / scale
-        return out
-
     def forward(self, inp):
         """
         Args:
