@@ -10,10 +10,11 @@ from .layers.modules import Affine
 from .layers.embedding import PositionalEmbedding
 
 
+
 class Transformer(nn.Module):
     """ Assemble layers to build Transformer """
 
-    def __init__(self, d_m, inp_vocab_size, out_vocab_size, d_ff, n=3):
+    def __init__(self, d_m, inp_vocab_size, out_vocab_size, d_ff, n=6):
         super(Transformer, self).__init__()
         self.inp_emb = PositionalEmbedding(inp_vocab_size, d_m)
         self.out_emb = PositionalEmbedding(out_vocab_size, d_m)
@@ -22,7 +23,7 @@ class Transformer(nn.Module):
         self.dec_layers = nn.ModuleList(
             [Decoder(d_m, d_m, d_ff) for _ in range(n)])
         self.affine = Affine(d_m, out_vocab_size)
-        self.n = n
+        self.n_layer = n
 
     def encoder(self, inp_batch, src_mask):
         """
